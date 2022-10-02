@@ -6,7 +6,9 @@ https://github.com/NIKDISSV-Forever/UniversalIMG
 
 # GUI
 
-![](screenshots/1.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/main.png)
+
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/1.png)
 
 ## Buttons
 
@@ -28,35 +30,35 @@ https://github.com/NIKDISSV-Forever/UniversalIMG
 
 <kbd>F7</kbd> <kbd>Ctrl+L</kbd> - Light (Theme) | Лампочка (Тема)
 
-![](screenshots/4.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/4.png)
 
 While something works, other buttons are disabled.
 
 Если вы нажали на что-то, кнопки побледнеют пока то на что вы нажали, делает что должно
-![](screenshots/8.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/8.png)
 
 There are light and dark themes, the letter A under the light bulb means that the theme depends on the theme of the
 system (Win 10)
 
 Есть светлая и тёмная темы, буква A под лампочкой означает, что тема зависит от темы системы (Win 10)
-![](screenshots/14.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/14.png)
 
 ## Files list
 
-![](screenshots/10.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/10.png)
 
 Click on the button with the file name to rename it.
 
 Нажмите на кнопку с именем файла чтоб его переименовать.
-![](screenshots/12.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/12.png)
 
 ### Sorting
 
 Нажмите на название колонки чтобы по ней отсортировать.
 
 Just click on a column heading to sort.
-![](screenshots/2.png)
-![](screenshots/11.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/2.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/11.png)
 
 ### Navigation bar
 
@@ -64,7 +66,7 @@ Specify the size and page number. Search by file name.
 
 Указывайте размер и номер страницы. Ищите по названию файла.
 
-![](screenshots/9.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/9.png)
 
 Up/Down Arrows, Top (First Page)/Down (Last Page) Arrows
 
@@ -76,7 +78,7 @@ Select all files to delete or export (see Buttons)
 
 Ничего особенного. Выберите все файлы, чтоб их удалить или экспортировать (смотрите Buttons)
 
-![](screenshots/3.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/3.png)
 
 ## Logging
 
@@ -84,18 +86,18 @@ Select all files to delete or export (see Buttons)
 
 Вывод [freimgedcs](https://code.google.com/archive/p/freimgedcs). Если в нём есть Failed, значит что-то идёт не так.
 
-![](screenshots/5.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/5.png)
 
-![](screenshots/6.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/6.png)
 
-![](screenshots/13.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/13.png)
 
 ## Progress bar
 
 There is a progress display.
 
 Если что-то происходит с группой файлов, эта оранжевая полоска будет двигаться.
-![](screenshots/7.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/7.png)
 
 # Code
 
