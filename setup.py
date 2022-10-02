@@ -1,5 +1,7 @@
 import setuptools
 
+import pyimgedit
+
 with open('README.md', encoding='UTF-8') as f:
     readme = f.read()
 
@@ -11,8 +13,8 @@ with open('requirements_gui.txt', encoding='UTF-8') as f:
 extras_require = {'gui': requires_gui, 'all': requires + requires_gui}
 
 setuptools.setup(
-    name="PyFastDub",
-    version="1.0.0",
+    name="UniversalIMG",
+    version='.'.join(map(str, pyimgedit.__version__)),
 
     description="Open & edit .img files for gta III / VC / SA (+GUI)",
 

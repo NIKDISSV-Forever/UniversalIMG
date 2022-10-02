@@ -13,6 +13,8 @@ from html_table_parser.parser import HTMLTableParser
 
 __author__ = 'NIKDISSV'
 __licence__ = 'MIT'
+__version__ = (1, 0, 0)
+
 try:
     it_file = __file__
 except NameError:
@@ -20,8 +22,10 @@ except NameError:
 
 PACKAGE_DIR = Path(it_file).parent
 EXECUTABLE_DOWNLOAD_URLS = [
+    'https://github.com/NIKDISSV-Forever/UniversalIMG/blob/main/pyimgedit/freimgedcs.exe?raw=true',
+
     # https://code.google.com/archive/p/freimgedcs
-    'https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/freimgedcs/freimgedcs.exe'
+    'https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/freimgedcs/freimgedcs.exe',
 ]
 
 
