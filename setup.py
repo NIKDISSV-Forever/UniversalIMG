@@ -25,6 +25,7 @@ setuptools.setup(
 
     install_requires=requires,
     extras_require=extras_require,
+    data_files=[('pyimgedit', ['pyimgedit/icon.png'])],
 
     author_email='nikdissv@proton.me',
 

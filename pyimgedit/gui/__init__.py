@@ -30,6 +30,7 @@ from kivymd.uix.progressbar import MDProgressBar
 from kivymd.uix.textfield import MDTextField
 
 from pyimgedit import IMGArchive
+from pyimgedit import PACKAGE_DIR
 from pyimgedit import __version__
 from pyimgedit.gui.archive_data_view import ArchiveDataView, SELECTED_ICON_PADDING, get_item
 from pyimgedit.gui.archive_info_view import ArchiveInfoView
@@ -126,7 +127,7 @@ class UniversalIMGApp(MDApp):
 
     TITLE = 'Universal IMG'
 
-    icon = 'icon.png' if os.path.isfile('icon.png') else '../icon.png'
+    icon = str(PACKAGE_DIR / 'icon.png')
     _version_verdict = StringProperty('')
 
     def build(self):
