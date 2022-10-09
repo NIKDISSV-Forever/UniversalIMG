@@ -99,6 +99,13 @@ There is a progress display.
 Если что-то происходит с группой файлов, эта оранжевая полоска будет двигаться.
 ![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/7.png)
 
+---
+
+Если инициализация прошла успешно, но список файлов пустой, может помочь запуск от имени администратора.
+
+If the initialization was successful, but the list of files is empty, running as administrator may help.
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/error.png)
+
 # Code
 
 > pip install [UniversalIMG](https://pypi.org/project/UniversalIMG)
