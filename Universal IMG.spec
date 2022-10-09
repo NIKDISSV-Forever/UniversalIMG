@@ -10,7 +10,7 @@ a = Analysis(
     binaries=[],
     datas=[
         ('pyimgedit/freimgedcs.exe', 'pyimgedit'),
-        ('icon.png', '.')
+        ('pyimgedit/icon.png', 'pyimgedit')
     ],
     hiddenimports=['kivymd.icon_definitions', 'kivymd.icon_definitions.md_icons'],
     hookspath=[],
@@ -44,5 +44,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='icon.png',
+    icon='pyimgedit/icon.png'
 )

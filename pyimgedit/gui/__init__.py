@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import os
 import sys
-import threading
-import urllib.request
 from functools import partial, wraps
+from threading import Thread
 from tkinter.filedialog import (
     askdirectory,
     askopenfilename,
@@ -13,12 +12,13 @@ from tkinter.filedialog import (
 from tkinter.messagebox import showerror
 from typing import Callable, Sized, TypeVar
 from urllib.error import URLError
+from urllib.request import urlopen
 
 import darkdetect
 from kivy.clock import Clock, mainthread
 from kivy.core.window import Window, WindowBase
 from kivy.metrics import dp
-from kivy.properties import (AliasProperty, BooleanProperty, ObjectProperty, ObservableList, StringProperty)
+from kivy.properties import (AliasProperty, BooleanProperty, ObjectProperty, StringProperty)
 from kivy.resources import resource_add_path
 from kivymd.app import MDApp
 from kivymd.toast import toast
@@ -46,7 +46,7 @@ toast_mainthread = mainthread(toast)
 def version_check_message() -> str:
     last_version_url = 'https://github.com/NIKDISSV-Forever/UniversalIMG/blob/main/version.txt?raw=true'
     try:
-        with urllib.request.urlopen(last_version_url) as resp:
+        with urlopen(last_version_url) as resp:
             last_version = (*(int(i) for i in resp.read().split(b'.')),)
     except URLError:
         return '.'.join(str(i) for i in __version__)
@@ -117,7 +117,7 @@ def new_thread(func: Callable):
             except Exception as e:
                 showerror(f'{e.__class__.__name__} ({func.__name__})', str(e))
 
-        threading.Thread(target=wrapper2, daemon=True).start()
+        Thread(target=wrapper2, daemon=True).start()
 
     return wrapper
 
@@ -242,7 +242,7 @@ class UniversalIMGApp(MDApp):
 
     def on_start(self):
         self.title = self.TITLE
-        threading.Thread(target=self.set_version_checked_title).start()
+        Thread(target=self.set_version_checked_title).start()
         Window.size = (1000, 500)
         Window.minimum_width = 790
         Window.minimum_height = 500
@@ -250,7 +250,7 @@ class UniversalIMGApp(MDApp):
         self.auto_theme = True
         self.open_archive()
 
-    def on_hotkeys(self, window: WindowBase, keycode: int, key_pos: int, text: str, modifiers: ObservableList):
+    def on_hotkeys(self, window: WindowBase, keycode: int, key_pos: int, text: str, modifiers: list):
         del window, key_pos, text
         if 'ctrl' in modifiers:
             match keycode:

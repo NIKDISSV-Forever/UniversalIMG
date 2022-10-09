@@ -5,7 +5,6 @@ import math
 from typing import SupportsInt
 
 from kivy.clock import mainthread
-from kivy.core.clipboard import Clipboard
 from kivy.graphics import Color
 from kivy.input.providers.mouse import MouseMotionEvent
 from kivy.metrics import dp
@@ -13,9 +12,8 @@ from kivy.properties import (AliasProperty, BooleanProperty,
                              ListProperty, NumericProperty,
                              ObjectProperty, OptionProperty)
 from kivy.uix.boxlayout import BoxLayout
-from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.button import MDIconButton
+from kivymd.uix.button import BaseButton, MDIconButton
 from kivymd.uix.button import MDRectangleFlatButton
 from kivymd.uix.label import MDLabel
 from kivymd.uix.scrollview import MDScrollView
@@ -96,9 +94,8 @@ class ArchiveDataView(BoxLayout):
     _last_page = NumericProperty(-1)
 
     @staticmethod
-    def _on_name_button_press(button: MDRectangleFlatButton):
-        Clipboard.copy(text := button.text)
-        toast(f'{text!r} copied!')
+    def _on_name_button_press(button: BaseButton):
+        pass
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

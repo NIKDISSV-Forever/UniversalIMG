@@ -18,7 +18,7 @@ class ActionIconButton(MDBoxLayout):
 class ThemeLightbulb(MDIconButton):
     __slots__ = ()
 
-    def get_theme(self):
+    def get_theme(self) -> tuple[bool, bool]:
         """
         :return:
         (is_light, is_auto)

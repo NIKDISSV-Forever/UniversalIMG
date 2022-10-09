@@ -25,7 +25,7 @@ setuptools.setup(
 
     install_requires=requires,
     extras_require=extras_require,
-    data_files=[('pyimgedit', ['pyimgedit/icon.png'])],
+    data_files=[('pyimgedit', ['pyimgedit/icon.png', 'pyimgedit/freimgedcs.exe'])],
 
     author_email='nikdissv@proton.me',
 

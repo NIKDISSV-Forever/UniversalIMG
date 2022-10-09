@@ -13,7 +13,7 @@ from html_table_parser.parser import HTMLTableParser
 
 __author__ = 'NIKDISSV'
 __licence__ = 'MIT'
-__version__ = (1, 1, 1)
+__version__ = (1, 1, 2)
 
 try:
     it_file = __file__
