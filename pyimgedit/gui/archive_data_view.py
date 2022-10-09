@@ -80,11 +80,12 @@ def get_item(file: ArchiveContent, **kwargs) -> MDBoxLayout:
 class ArchiveDataView(BoxLayout):
     __slots__ = ()
 
-    selected_filenames = {*()}
-
     page_size = NumericProperty(10)
     page = NumericProperty(0)
     rows = ListProperty([])
+
+    showed_rows = ListProperty([])
+    selected_filenames = ListProperty([])
     row_items = ListProperty([])
     scroll_direction = OptionProperty('nope', options=['up', 'nope', 'down'])
 
@@ -247,18 +248,19 @@ class ArchiveDataView(BoxLayout):
         for child in self.select_list.children.copy():
             self.select_list.remove_widget(child)
 
-        rows = self.rows
+        showed_rows = self.rows
         row: ArchiveContent
 
         if text := self.search_field.text.strip():
             fnmatch_func = self._get_fnmatch(text)
-            rows = [row for row in rows if fnmatch_func(row.name)]
+            showed_rows = [row for row in showed_rows if fnmatch_func(row.name)]
 
-        for row in rows[start:start + self.page_size]:
+        for row in showed_rows[start:start + self.page_size]:
             self.select_list.add_widget(
                 self.get_item(row)
             )
 
+        self.showed_rows = showed_rows
         self._last_page = self.page
         self.reselect()
         self.set_page()
@@ -307,16 +309,16 @@ class ArchiveDataView(BoxLayout):
     def select_all(self, button_instance: MDIconButton = None):
         self.all_selected = not self.all_selected
         if self.all_selected:
-            self.selected_filenames.clear()
-            self.selected_filenames |= {file.name for file in self.rows}
+            self.selected_filenames = [file.name for file in self.showed_rows]
         else:
             self.selected_filenames.clear()
         self.reselect()
-        (button_instance or self.select_all_button).icon = ('select-all', 'select',)[self.select_list.get_selected()]
+        (button_instance or self.select_all_button).icon = ('select-all', 'select')[self.select_list.get_selected()]
 
     def on_select(self, item: selection.SelectionItem):
         if (name := self.get_filename_from_item(item)) not in self.selected_filenames:
-            self.selected_filenames.add(name)
+            self.selected_filenames.append(name)
+
         item.selected = True
 
     def on_unselect(self, item: selection.SelectionItem):
@@ -363,5 +365,5 @@ class ArchiveDataView(BoxLayout):
         return item.children[1].children[2].children[0].text
 
     @property
-    def pages_num(self):
-        return math.ceil(len(self.rows) / self.page_size)
+    def pages_num(self) -> int:
+        return math.ceil(len(self.showed_rows) / self.page_size)-1
