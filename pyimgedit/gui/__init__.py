@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import sys
 import threading
+import urllib.request
 from functools import partial, wraps
 from tkinter.filedialog import (
     askdirectory,
@@ -11,6 +12,7 @@ from tkinter.filedialog import (
 )
 from tkinter.messagebox import showerror
 from typing import Callable, Sized, TypeVar
+from urllib.error import URLError
 
 import darkdetect
 from kivy.clock import Clock, mainthread
@@ -33,6 +35,7 @@ from kivymd.uix.progressbar import MDProgressBar
 from kivymd.uix.textfield import MDTextField
 
 from pyimgedit import IMGArchive
+from pyimgedit import __version__
 from pyimgedit.gui.archive_data_view import ArchiveDataView, SELECTED_ICON_PADDING, get_item
 from pyimgedit.gui.archive_info_view import ArchiveInfoView
 from pyimgedit.gui.archive_log_view import ArchiveLogView
@@ -42,6 +45,20 @@ T = TypeVar('T')
 T2 = TypeVar('T2')
 
 toast_mainthread = mainthread(toast)
+
+
+def version_check_message() -> str:
+    last_version_url = 'https://github.com/NIKDISSV-Forever/UniversalIMG/blob/main/version.txt?raw=true'
+    try:
+        with urllib.request.urlopen(last_version_url) as resp:
+            last_version = (*(int(i) for i in resp.read().split(b'.')),)
+            print(last_version)
+            print(__version__)
+    except URLError:
+        return '.'.join(str(i) for i in __version__)
+    if __version__ == last_version:
+        return 'latest'
+    return 'not latest'
 
 
 def _disable_brothers(func: Callable[[T], T2]):
@@ -113,8 +130,10 @@ def new_thread(func: Callable):
 
 class UniversalIMGApp(MDApp):
     __slots__ = ()
+
     TITLE = 'Universal IMG'
-    icon = 'icon.png'
+    icon = 'icon.png' if os.path.isfile('icon.png') else '../icon.png'
+    _version_verdict = StringProperty('')
 
     def build(self):
         MDLabel.font_size = BaseButton.font_size = dp(18)
@@ -213,7 +232,20 @@ class UniversalIMGApp(MDApp):
 
         return layout
 
+    @mainthread
+    def retitle(self):
+        self.title = self.TITLE
+        if self._version_verdict:
+            self.title += f' [{self._version_verdict}]'
+        if self.open_archive_filename:
+            self.title += f' ({self.open_archive_filename})'
+
+    def set_version_checked_title(self):
+        self._version_verdict = version_check_message()
+        self.retitle()
+
     def on_start(self):
+        threading.Thread(target=self.set_version_checked_title).start()
         Window.size = (1000, 500)
         Window.minimum_width = 790
         Window.minimum_height = 500
@@ -260,8 +292,6 @@ class UniversalIMGApp(MDApp):
 
     def open_archive(self):
         self._opened_archive = IMGArchive(self.open_archive_filename)
-        if self.open_archive_filename:
-            self.title = f'{self.TITLE} ({self.open_archive_filename})'
         self.reload_views()
 
     @mainthread
@@ -284,6 +314,7 @@ class UniversalIMGApp(MDApp):
                 )):
             self.open_archive_filename = filename
             self.open_archive()
+        self.retitle()
 
     @_act_button_process
     def reload_list(self):

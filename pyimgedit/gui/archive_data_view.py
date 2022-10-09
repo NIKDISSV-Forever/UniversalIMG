@@ -43,7 +43,7 @@ class FixedSelectionItem(selection.SelectionItem):
 selection.SelectionItem = FixedSelectionItem
 
 
-def aoi(value: str | SupportsInt):
+def aoi(value: str | SupportsInt) -> int | None:
     try:
         return int(value)
     except (ValueError, TypeError):
@@ -366,4 +366,4 @@ class ArchiveDataView(BoxLayout):
 
     @property
     def pages_num(self) -> int:
-        return math.ceil(len(self.showed_rows) / self.page_size)-1
+        return math.ceil(len(self.showed_rows) / self.page_size) - 1
