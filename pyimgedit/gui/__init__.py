@@ -18,12 +18,7 @@ import darkdetect
 from kivy.clock import Clock, mainthread
 from kivy.core.window import Window, WindowBase
 from kivy.metrics import dp
-from kivy.properties import (
-    AliasProperty,
-    BooleanProperty,
-    ObjectProperty,
-    ObservableList, StringProperty
-)
+from kivy.properties import (AliasProperty, BooleanProperty, ObjectProperty, ObservableList, StringProperty)
 from kivy.resources import resource_add_path
 from kivymd.app import MDApp
 from kivymd.toast import toast
@@ -52,8 +47,6 @@ def version_check_message() -> str:
     try:
         with urllib.request.urlopen(last_version_url) as resp:
             last_version = (*(int(i) for i in resp.read().split(b'.')),)
-            print(last_version)
-            print(__version__)
     except URLError:
         return '.'.join(str(i) for i in __version__)
     if __version__ == last_version:
@@ -132,6 +125,7 @@ class UniversalIMGApp(MDApp):
     __slots__ = ()
 
     TITLE = 'Universal IMG'
+
     icon = 'icon.png' if os.path.isfile('icon.png') else '../icon.png'
     _version_verdict = StringProperty('')
 
@@ -234,17 +228,19 @@ class UniversalIMGApp(MDApp):
 
     @mainthread
     def retitle(self):
-        self.title = self.TITLE
+        title_parts = [self.TITLE]
         if self._version_verdict:
-            self.title += f' [{self._version_verdict}]'
+            title_parts.append(f'[{self._version_verdict}]')
         if self.open_archive_filename:
-            self.title += f' ({self.open_archive_filename})'
+            title_parts.append(f'({self.open_archive_filename})')
+        self.title = ' '.join(title_parts)
 
     def set_version_checked_title(self):
         self._version_verdict = version_check_message()
         self.retitle()
 
     def on_start(self):
+        self.title = self.TITLE
         threading.Thread(target=self.set_version_checked_title).start()
         Window.size = (1000, 500)
         Window.minimum_width = 790

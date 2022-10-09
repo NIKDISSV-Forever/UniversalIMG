@@ -174,7 +174,7 @@ class IMGArchive:
 
         with open(html_file) as table_file:
             p.feed(table_file.read())
-        information_about_img_archive, contents = p.tables
+        information_about_img_archive, contents = [*p.tables, [], []][:2]
         if delete_html_file:
             os.remove(html_file)
         information_about_img_archive = dict(information_about_img_archive)
