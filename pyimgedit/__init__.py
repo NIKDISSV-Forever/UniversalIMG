@@ -165,19 +165,22 @@ class IMGArchive:
         header = self.check_call('lst')
         p = HTMLTableParser()
         html_file = f'{self.imgname}.html'
-
         if not os.path.isfile(html_file):
-            archive_info = (('File name', self.imgname),)
+            archive_info = (('File name', str(self.imgname)),)
             if os.path.isfile(self.imgname):
                 archive_info += ('File size', f'{bytes2units(os.stat(self.imgname).st_size)}'),
             return header, archive_info, (('Offset (in blocks / bytes)', 'Size (in blocks / bytes)', 'Name'),)
 
         with open(html_file) as table_file:
             p.feed(table_file.read())
-        information_about_img_archive, contents = [*p.tables, [], []][:2]
         if delete_html_file:
             os.remove(html_file)
+        information_about_img_archive, contents = [*p.tables, [], []][:2]
         information_about_img_archive = dict(information_about_img_archive)
+        if 'File name' not in information_about_img_archive:
+            information_about_img_archive['File name'] = str(self.imgname)
+        if 'File size' not in information_about_img_archive and os.path.isfile(self.imgname):
+            information_about_img_archive['File size'] = f'{bytes2units(os.stat(self.imgname).st_size)}'
 
         for k, v in information_about_img_archive.copy().items():
             if v.endswith('bytes'):

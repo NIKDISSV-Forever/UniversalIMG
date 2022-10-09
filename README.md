@@ -101,10 +101,16 @@ There is a progress display.
 
 ---
 
-Если инициализация прошла успешно, но список файлов пустой, может помочь запуск от имени администратора.
+Если у вас проблемы с открытием архивов, может помочь запуск от имени администратора.
 
-If the initialization was successful, but the list of files is empty, running as administrator may help.
+Если это не помогло, вам придётся убедиться что исполняемый файл и архив находятся на одном диске.
+
+If you're having trouble opening archives, running as administrator may help.
+
+If this does not help, you will have to make sure that the executable and the archive are on the same disk.
+
 ![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/error.png)
+![](https://github.com/NIKDISSV-Forever/UniversalIMG/raw/main/screenshots/fixed_error.png)
 
 # Code
 
