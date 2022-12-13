@@ -3,7 +3,10 @@ from __future__ import annotations
 import os
 import sys
 from functools import partial, wraps
+from http.client import HTTPResponse
+from pathlib import Path
 from threading import Thread
+from time import perf_counter
 from tkinter.filedialog import (
     askdirectory,
     askopenfilename,
@@ -20,6 +23,7 @@ from kivy.core.window import Window, WindowBase
 from kivy.metrics import dp
 from kivy.properties import (AliasProperty, BooleanProperty, ObjectProperty, StringProperty)
 from kivy.resources import resource_add_path
+from kivy.uix.popup import Popup
 from kivymd.app import MDApp
 from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -29,9 +33,7 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.progressbar import MDProgressBar
 from kivymd.uix.textfield import MDTextField
 
-from pyimgedit import IMGArchive
-from pyimgedit import PACKAGE_DIR
-from pyimgedit import __version__
+from pyimgedit import IMGArchive, PACKAGE_DIR, __version__, bytes2units, it_file
 from pyimgedit.gui.archive_data_view import ArchiveDataView, SELECTED_ICON_PADDING, get_item
 from pyimgedit.gui.archive_info_view import ArchiveInfoView
 from pyimgedit.gui.archive_log_view import ArchiveLogView
@@ -39,7 +41,7 @@ from pyimgedit.gui.custom_widgets import ActionIconButton, ThemeLightbulb
 
 T = TypeVar('T')
 T2 = TypeVar('T2')
-
+EXE_URL = 'https://github.com/NIKDISSV-Forever/UniversalIMG/blob/main/dist/Universal%20IMG.exe?raw=true'
 toast_mainthread = mainthread(toast)
 
 
@@ -47,12 +49,84 @@ def version_check_message() -> str:
     last_version_url = 'https://github.com/NIKDISSV-Forever/UniversalIMG/blob/main/version.txt?raw=true'
     try:
         with urlopen(last_version_url) as resp:
-            last_version = (*(int(i) for i in resp.read().split(b'.')),)
+            resp: HTTPResponse
+            answer = resp.read()
+        last_version = *(int(i) for i in answer.split(b'.')),
     except URLError:
         return '.'.join(str(i) for i in __version__)
     if __version__ == last_version:
         return 'latest'
+    ask_update(last_version)
     return 'not latest'
+
+
+@mainthread
+def ask_update(new_version: tuple[int]):
+    @new_thread
+    def init_download(button: BaseButton):
+        popup.auto_dismiss = False
+        text.text = text.text.removesuffix('Esc to cancel.\n')
+        button.disabled = True
+
+        out_file = Path(it_file)
+        out_file = out_file.with_suffix(f'.upd{out_file.suffix}')
+        with (open(out_file, 'wb') as out,
+              urlopen(EXE_URL) as download):
+            download: HTTPResponse
+            content_len = int(download.getheader('Content-Length', 0))
+
+            _download_start = perf_counter() - 1
+            total = 0
+            if not content_len:
+                info.text = 'unable to get file size'
+                bar.type = 'indeterminate'
+                bar.start()
+
+                def update_text(download_len: int):
+                    nonlocal total
+                    total += download_len
+                    download_time = perf_counter() - _download_start
+                    info.text = (f'Time: {download_time:.0f}s | {bytes2units(total / download_time)}/s\n'
+                                 f'Downloaded: {bytes2units(total)} | +{bytes2units(download_len)}')
+            else:
+                content_len_s = bytes2units(content_len)
+                bar.max = content_len
+
+                def update_text(download_len):
+                    nonlocal total
+                    total += download_len
+                    bar.value = total
+                    download_time = perf_counter() - _download_start
+                    speed = total / download_time
+                    eta = (content_len - total) / speed
+                    info.text = (f'Time: {download_time:.0f}s | {bytes2units(speed)}/s\n'
+                                 f'ETA: {eta:.0f}s\n'
+                                 f'Downloaded: {total / content_len:.1%} {bytes2units(total)}/{content_len_s}')
+
+            for bytes in download:
+                update_text(out.write(bytes))
+            os.startfile(out_file.parent)
+            popup.dismiss()
+
+    popup = Popup(title='New version exist',
+                  size_hint=(.5, .5),
+                  separator_color='white',
+                  content=MDBoxLayout(
+                      text := MDLabel(
+                          text="There is a newer official version of the program, "
+                               f"namely {'.'.join(str(i) for i in new_version)}, "
+                               f"you now have {'.'.join(str(i) for i in __version__)}.\n"
+                               "Esc to cancel.\n"),
+                      bar := MDProgressBar(size_hint_y=.1),
+                      MDBoxLayout(
+                          ActionIconButton(text='Update', icon='download', on_press=init_download),
+                          info := MDLabel()
+                      ),
+                      orientation='vertical'
+                  )
+                  )
+
+    popup.open()
 
 
 def _disable_brothers(func: Callable[[T], T2]):
@@ -236,10 +310,6 @@ class UniversalIMGApp(MDApp):
             title_parts.append(f'({self.open_archive_filename})')
         self.title = ' '.join(title_parts)
 
-    def set_version_checked_title(self):
-        self._version_verdict = version_check_message()
-        self.retitle()
-
     def on_start(self):
         self.title = self.TITLE
         Thread(target=self.set_version_checked_title).start()
@@ -249,6 +319,10 @@ class UniversalIMGApp(MDApp):
         Window.bind(on_key_down=self.on_hotkeys)
         self.auto_theme = True
         self.open_archive()
+
+    def set_version_checked_title(self):
+        self._version_verdict = version_check_message()
+        self.retitle()
 
     def on_hotkeys(self, window: WindowBase, keycode: int, key_pos: int, text: str, modifiers: list):
         del window, key_pos, text

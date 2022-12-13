@@ -2,6 +2,8 @@ import setuptools
 
 import pyimgedit
 
+with open('version.txt', 'w') as f:
+    f.write('.'.join(str(i) for i in pyimgedit.__version__))
 with open('README.md', encoding='UTF-8') as f:
     readme = f.read()
 
