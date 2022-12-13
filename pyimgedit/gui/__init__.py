@@ -399,14 +399,8 @@ class UniversalIMGApp(MDApp):
         ))
         if not filenames:
             return
-        cwd = os.getcwd()
         for filename in self.progress_loop(filenames):
-            try:
-                result = self._opened_archive.add(os.path.relpath(filename, cwd))
-            except ValueError:
-                os.chdir(os.path.dirname(filename))
-                result = self._opened_archive.add(os.path.basename(filename))
-                os.chdir(cwd)
+            result = self._opened_archive.add(filename)
             self.log_view.set_log(result)
         self.reload_views()
 

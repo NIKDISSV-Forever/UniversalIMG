@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import os
 import os.path
 import re
@@ -116,17 +117,17 @@ class IMGArchive:
 
     def _call(self, key: str, imgname: str | Path, filename: str = '', filename2: str = ''):
         cwd = os.getcwd()
+        parent = None
         try:
-            imgname = Path(imgname)
-            os.chdir(imgname.parent)
+            os.chdir(parent := imgname.parent)
             imgname = imgname.name
         except OSError:
             pass
         command = [self.executable, f'-{key}', imgname]
         if filename:
-            command.append(filename)
+            command.append(self._rel_fn(filename, parent))
         if filename2:
-            command.append(filename2)
+            command.append(self._rel_fn(filename2, parent))
         proc = subprocess.Popen(command, stdout=subprocess.PIPE, text=True, shell=True)
         yield proc
         while True:
@@ -138,6 +139,13 @@ class IMGArchive:
             else:
                 break
         os.chdir(cwd)
+
+    @staticmethod
+    def _rel_fn(fn: str, parent: Path) -> str:
+        try:
+            return str(Path(fn).relative_to(parent))
+        except ValueError:
+            return fn
 
     def call(self, key: str, filename: str = '', filename2: str = ''):
         processor = self._call(key, self.imgname, filename, filename2)
@@ -219,3 +227,14 @@ class IMGArchive:
     def delete(self, filename: str):
         """Delete file [filename] from archive (imgname)"""
         return self.check_call('del', filename)
+
+
+class StreamHandler(logging.StreamHandler):
+    def __init__(self):
+        super().__init__()
+        if self.stream is None:
+            from io import StringIO
+            self.stream = StringIO()
+
+
+logging.StreamHandler = StreamHandler  # fix for PyInstaller
