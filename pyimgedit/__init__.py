@@ -230,8 +230,8 @@ class IMGArchive:
 
 
 class StreamHandler(logging.StreamHandler):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         if self.stream is None:
             from io import StringIO
             self.stream = StringIO()
