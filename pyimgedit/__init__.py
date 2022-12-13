@@ -115,6 +115,13 @@ class IMGArchive:
         self.executable = freimgedcs_path
 
     def _call(self, key: str, imgname: str | Path, filename: str = '', filename2: str = ''):
+        cwd = os.getcwd()
+        try:
+            imgname = Path(imgname)
+            os.chdir(imgname.parent)
+            imgname = imgname.name
+        except OSError:
+            pass
         command = [self.executable, f'-{key}', imgname]
         if filename:
             command.append(filename)
@@ -130,6 +137,7 @@ class IMGArchive:
                 yield line
             else:
                 break
+        os.chdir(cwd)
 
     def call(self, key: str, filename: str = '', filename2: str = ''):
         processor = self._call(key, self.imgname, filename, filename2)
